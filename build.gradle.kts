@@ -24,7 +24,6 @@ dependencies {
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     // database
     implementation("org.springframework.boot:spring-boot-starter-data-jpa")
-    implementation("org.springframework.boot:spring-boot-starter-data-elasticsearch")
     implementation("org.hibernate.orm:hibernate-vector") // pgvector의 vector 타입을 Hibernate가 다룰 수 있게 한다
     implementation("org.springframework.boot:spring-boot-starter")
     implementation("org.springframework.ai:spring-ai-starter-model-openai")
@@ -36,7 +35,6 @@ dependencies {
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testCompileOnly("org.projectlombok:lombok")
     testImplementation("org.springframework.boot:spring-boot-starter-data-jpa-test")
-    testImplementation("org.testcontainers:testcontainers-elasticsearch")
     testImplementation("org.springframework.boot:spring-boot-starter-webmvc-test")
     testImplementation("org.springframework.boot:spring-boot-testcontainers")
     testImplementation("org.testcontainers:testcontainers-junit-jupiter")

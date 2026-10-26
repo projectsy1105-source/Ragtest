@@ -2,7 +2,6 @@ package com.back.product.tool;
 
 import com.back.TestcontainersConfiguration;
 import com.back.product.entity.Product;
-import com.back.product.repository.ProductDocumentRepository;
 import com.back.product.repository.ProductRepository;
 import com.back.product.service.ProductService;
 import org.junit.jupiter.api.BeforeEach;
@@ -13,7 +12,6 @@ import org.springframework.ai.tool.ToolCallback;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.context.annotation.Import;
-import org.springframework.data.elasticsearch.core.ElasticsearchOperations;
 import org.springframework.test.context.ActiveProfiles;
 
 import java.util.Arrays;
@@ -26,29 +24,22 @@ import static org.junit.jupiter.api.Assertions.*;
 @Import(TestcontainersConfiguration.class)
 @SpringBootTest
 @ActiveProfiles("test")
-public class ProductSearchToolTests {
-
+class ProductSearchToolTests {
     @Autowired
     private ProductSearchTool productSearchTool;
     @Autowired
     private ProductService productService;
     @Autowired
     private ProductRepository productRepository;
-    @Autowired
-    private ProductDocumentRepository productDocumentRepository;
-    @Autowired
-    private ElasticsearchOperations elasticsearchOperations;
 
     private Product gamingLaptop;
 
     @BeforeEach
     void setUp() {
-        productDocumentRepository.deleteAll();
         productRepository.deleteAll();
         gamingLaptop = productService.create("Gaming Laptop", List.of("gaming", "laptop", "high-performance"));
         productService.create("Business Laptop", List.of("business", "laptop", "office"));
         productService.create("Gaming Mouse", List.of("gaming", "mouse", "RGB"));
-        elasticsearchOperations.indexOps(com.back.product.document.ProductDocument.class).refresh();
     }
 
     private Map<String, ToolCallback> tools() {
@@ -64,6 +55,7 @@ public class ProductSearchToolTests {
                 tools().keySet());
         System.out.println("searchProducts 입력 스키마 : " + tools().get("searchProducts").getToolDefinition().inputSchema());
     }
+
     @Test
     @DisplayName("AI가 k를 빼고 호출해도 기본값 5로 동작하고, 결과는 상품 JSON이다")
     void t2() {

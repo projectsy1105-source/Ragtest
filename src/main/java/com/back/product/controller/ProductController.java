@@ -1,8 +1,5 @@
 package com.back.product.controller;
 
-import co.elastic.clients.elasticsearch.core.CreateRequest;
-import co.elastic.clients.elasticsearch.core.SearchRequest;
-import co.elastic.clients.elasticsearch.core.UpdateRequest;
 import com.back.product.entity.Product;
 import com.back.product.service.ProductChatService;
 import com.back.product.service.ProductService;
