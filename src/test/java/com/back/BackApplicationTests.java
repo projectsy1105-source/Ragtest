@@ -37,4 +37,14 @@ class BackApplicationTests {
         assertEquals(2, count);
 
     }
+
+    @Test
+    @DisplayName("pgvector - product.embedding 컬럼이 vector(384) 타입이다")
+    void t2() {
+        String type = jdbcTemplate.queryForObject("""
+                SELECT format_type(atttypid, atttypmod) FROM pg_attribute
+                WHERE attrelid = 'product'::regclass AND attname = 'embedding'
+                """, String.class);
+        assertEquals("vector(384)", type);
+    }
 }
