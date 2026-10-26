@@ -1,6 +1,7 @@
 package com.back.product.service;
 
 import com.back.product.entity.Product;
+import com.back.product.entity.ProductKeyword;
 import com.back.product.repository.ProductRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.embedding.EmbeddingModel;
@@ -39,6 +40,22 @@ public class ProductService {
 
     public List<Product> findAll() {
         return StreamSupport.stream(productRepository.findAll().spliterator(), false).toList();
+    }
+
+    @Transactional
+    public int backfillMissingEmbeddings() {
+        int updated = 0;
+        for (Product product : productRepository.findByEmbeddingIsNull()) {
+            List<String> keywords = product.getKeywords().stream()
+                    .map(ProductKeyword::getKeyword)
+                    .toList();
+            if (keywords.isEmpty()) {
+                continue;
+            }
+            product.setEmbedding(embed(keywords));
+            updated++;
+        }
+        return updated;
     }
 
     @Transactional

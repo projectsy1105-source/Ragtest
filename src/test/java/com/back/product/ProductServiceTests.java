@@ -2,6 +2,7 @@ package com.back.product;
 
 import com.back.TestcontainersConfiguration;
 import com.back.product.entity.Product;
+import com.back.product.repository.ProductRepository;
 import com.back.product.service.ProductService;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -20,6 +21,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class ProductServiceTests {
     @Autowired
     private ProductService productService;
+    @Autowired
+    private ProductRepository productRepository;
 
     @Test
     @DisplayName("create - 상품과 384차원 벡터가 같은 행에 저장된다")
@@ -60,5 +63,19 @@ class ProductServiceTests {
         Product product = productService.create("이름만 있는 상품", List.of());
 
         assertNull(productService.findById(product.getId()).orElseThrow().getEmbedding());
+    }
+
+    @Test
+    @DisplayName("기존 상품의 빈 임베딩을 채워 DB에 저장한다")
+    void t5() {
+        Product product = new Product();
+        product.setName("기존 노트북");
+        product.addKeyword("laptop");
+        productRepository.save(product);
+
+        productService.backfillMissingEmbeddings();
+
+        Product updated = productService.findById(product.getId()).orElseThrow();
+        assertEquals(384, updated.getEmbedding().length);
     }
 }

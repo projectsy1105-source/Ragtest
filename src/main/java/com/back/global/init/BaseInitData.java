@@ -20,6 +20,10 @@ public class BaseInitData {
     public ApplicationRunner initDataRunner() {
         return args -> {
             if (!productService.findAll().isEmpty()) {
+                int updated = productService.backfillMissingEmbeddings();
+                if (updated > 0) {
+                    System.out.println("=== Embeddings added to " + updated + " existing products ===");
+                }
                 return;
             }
 
